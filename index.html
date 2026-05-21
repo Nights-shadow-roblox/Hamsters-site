@@ -2,112 +2,93 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Random Hamsters</title>
+<title>Infinite Hamsters</title>
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        background: #111;
-        color: white;
-        margin: 0;
-        padding: 20px;
-    }
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #111;
+    color: white;
+    margin: 0;
+    padding: 20px;
+}
 
-    h1 {
-        margin-bottom: 20px;
-    }
+h1 {
+    margin-bottom: 20px;
+}
 
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
-        max-width: 900px;
-        margin: auto;
-    }
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    max-width: 900px;
+    margin: auto;
+}
 
-    .grid img {
-        width: 100%;
-        height: 250px;
-        object-fit: cover;
-        border-radius: 12px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.6);
-        background: #222;
-    }
+.grid img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.6);
+    background: #222;
+}
 
-    button {
-        margin-top: 20px;
-        padding: 12px 25px;
-        font-size: 18px;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        background: #ffb347;
-        color: white;
-        transition: 0.2s;
-    }
-
-    button:hover {
-        background: #ff9800;
-        transform: scale(1.05);
-    }
-
-    footer {
-        margin-top: 50px;
-        font-size: 32px;
-        font-weight: bold;
-    }
+#loader {
+    margin: 30px;
+    font-size: 18px;
+    opacity: 0.7;
+}
 </style>
 </head>
 
 <body>
 
-<h1>Random Hamsters 🐹</h1>
+<h1>Infinite Hamsters 🐹</h1>
 
 <div class="grid" id="hamsterGrid"></div>
 
-<button onclick="loadHamsters()">Get New Images</button>
-
-<footer>made by Luni</footer>
+<div id="loader">Loading more hamsters...</div>
 
 <script>
-// Generate 500 unique hamster image URLs
-const hamsterImages = [];
+const API_KEY = "55957313-3f7b188cbd76ec04730d89a17";
+const grid = document.getElementById("hamsterGrid");
+const loader = document.getElementById("loader");
 
-for (let i = 1; i <= 500; i++) {
-    hamsterImages.push(
-        `https://loremflickr.com/600/400/hamster?lock=${i}`
+let page = 1;
+let loading = false;
+
+async function loadHamsters() {
+    if (loading) return;
+    loading = true;
+
+    const res = await fetch(
+        `https://pixabay.com/api/?key=${API_KEY}&q=hamster&image_type=photo&per_page=12&page=${page}`
     );
-}
 
-function loadHamsters() {
-    const grid = document.getElementById("hamsterGrid");
+    const data = await res.json();
 
-    // clear old images
-    grid.innerHTML = "";
-
-    // shuffle images randomly
-    const shuffled = [...hamsterImages]
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 4);
-
-    // display 4 random hamster images
-    shuffled.forEach(url => {
+    data.hits.forEach(item => {
         const img = document.createElement("img");
-
-        img.src = url;
-
-        img.loading = "lazy";
-
-        // hide broken images
-        img.onerror = () => {
-            img.style.display = "none";
-        };
-
+        img.src = item.webformatURL;
         grid.appendChild(img);
     });
+
+    page++;
+    loading = false;
 }
 
+// Infinite scroll trigger
+const observer = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+        loadHamsters();
+    }
+});
+
+observer.observe(loader);
+
+// initial load
 loadHamsters();
 </script>
 
