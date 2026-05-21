@@ -75,10 +75,10 @@ async function loadHamsters() {
     grid.innerHTML = "";
 
     for (let i = 0; i < 4; i++) {
-        // Random hamster search from Unsplash
         const img = document.createElement("img");
 
-        img.src = `https://source.unsplash.com/600x400/?hamster&sig=${Math.random()}`;
+        // Random image each refresh
+        img.src = `https://picsum.photos/seed/hamster${Math.random()}/600/400`;
 
         grid.appendChild(img);
     }
