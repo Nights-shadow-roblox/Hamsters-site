@@ -71,74 +71,41 @@
 <footer>made by Luni</footer>
 
 <script>
-async function loadHamsters() {
+// Generate 500 unique hamster image URLs
+const hamsterImages = [];
+
+for (let i = 1; i <= 500; i++) {
+    hamsterImages.push(
+        `https://loremflickr.com/600/400/hamster?lock=${i}`
+    );
+}
+
+function loadHamsters() {
     const grid = document.getElementById("hamsterGrid");
+
+    // clear old images
     grid.innerHTML = "";
 
-    for (let i = 0; i < 4; i++) {
+    // shuffle images randomly
+    const shuffled = [...hamsterImages]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 4);
+
+    // display 4 random hamster images
+    shuffled.forEach(url => {
         const img = document.createElement("img");
 
-        // Fully random hamster images from Flickr
-        img.src = `https://loremflickr.com/600/400/hamster?random=${Date.now() + i}`;
+        img.src = url;
 
         img.loading = "lazy";
 
-        grid.appendChild(img);
-    }
-}
-
-loadHamsters();
-</script>
-
-</body>
-</html>    button {
-        margin-top: 20px;
-        padding: 12px 25px;
-        font-size: 18px;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        background: #ffb347;
-        color: white;
-        transition: 0.2s;
-    }
-
-    button:hover {
-        background: #ff9800;
-        transform: scale(1.05);
-    }
-
-    footer {
-        margin-top: 50px;
-        font-size: 32px;
-        font-weight: bold;
-    }
-</style>
-</head>
-
-<body>
-
-<h1>Random Hamsters 🐹</h1>
-
-<div class="grid" id="hamsterGrid"></div>
-
-<button onclick="loadHamsters()">Get New Images</button>
-
-<footer>made by Luni</footer>
-
-<script>
-async function loadHamsters() {
-    const grid = document.getElementById("hamsterGrid");
-    grid.innerHTML = "";
-
-    for (let i = 0; i < 4; i++) {
-        const img = document.createElement("img");
-
-        // Random image each refresh
-        img.src = `https://picsum.photos/seed/hamster${Math.random()}/600/400`;
+        // hide broken images
+        img.onerror = () => {
+            img.style.display = "none";
+        };
 
         grid.appendChild(img);
-    }
+    });
 }
 
 loadHamsters();
