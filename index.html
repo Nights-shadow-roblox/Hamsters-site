@@ -1,70 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Infinite Hamsters</title>
-
-<style>
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background: #111;
-    color: white;
-    margin: 0;
-    padding: 20px;
-}
-
-h1 {
-    margin-bottom: 20px;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    max-width: 900px;
-    margin: auto;
-}
-
-.grid img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.6);
-    background: #222;
-}
-
-#loader {
-    margin: 30px;
-    font-size: 18px;
-    opacity: 0.7;
-}
-</style>
-</head>
-
-<body>
-
-<h1>Infinite Hamsters 🐹</h1>
-
-<div class="grid" id="hamsterGrid"></div>
-
-<div id="loader">Loading more hamsters...</div>
-
 <script>
 const API_KEY = "55957313-3f7b188cbd76ec04730d89a17";
 const grid = document.getElementById("hamsterGrid");
-const loader = document.getElementById("loader");
 
-let page = 1;
-let loading = false;
+const hamsterQueries = [
+    "hamster",
+    "cute hamster",
+    "baby hamster",
+    "hamster eating",
+    "hamster close up",
+    "hamster funny"
+];
+
+function getRandom(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
 
 async function loadHamsters() {
-    if (loading) return;
-    loading = true;
+    grid.innerHTML = ""; // clear old images
+
+    const query = getRandom(hamsterQueries);
+    const page = Math.floor(Math.random() * 50) + 1; // random page = new results
 
     const res = await fetch(
-        `https://pixabay.com/api/?key=${API_KEY}&q=hamster&image_type=photo&per_page=12&page=${page}`
+        `https://pixabay.com/api/?key=${API_KEY}&q=${encodeURIComponent(query)}&image_type=photo&per_page=12&page=${page}`
     );
 
     const data = await res.json();
@@ -74,23 +32,5 @@ async function loadHamsters() {
         img.src = item.webformatURL;
         grid.appendChild(img);
     });
-
-    page++;
-    loading = false;
 }
-
-// Infinite scroll trigger
-const observer = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting) {
-        loadHamsters();
-    }
-});
-
-observer.observe(loader);
-
-// initial load
-loadHamsters();
 </script>
-
-</body>
-</html>
