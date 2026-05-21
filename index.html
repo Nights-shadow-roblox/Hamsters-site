@@ -32,9 +32,66 @@
         object-fit: cover;
         border-radius: 12px;
         box-shadow: 0 0 10px rgba(0,0,0,0.6);
+        background: #222;
     }
 
     button {
+        margin-top: 20px;
+        padding: 12px 25px;
+        font-size: 18px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        background: #ffb347;
+        color: white;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        background: #ff9800;
+        transform: scale(1.05);
+    }
+
+    footer {
+        margin-top: 50px;
+        font-size: 32px;
+        font-weight: bold;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>Random Hamsters 🐹</h1>
+
+<div class="grid" id="hamsterGrid"></div>
+
+<button onclick="loadHamsters()">Get New Images</button>
+
+<footer>made by Luni</footer>
+
+<script>
+async function loadHamsters() {
+    const grid = document.getElementById("hamsterGrid");
+    grid.innerHTML = "";
+
+    for (let i = 0; i < 4; i++) {
+        const img = document.createElement("img");
+
+        // Fully random hamster images from Flickr
+        img.src = `https://loremflickr.com/600/400/hamster?random=${Date.now() + i}`;
+
+        img.loading = "lazy";
+
+        grid.appendChild(img);
+    }
+}
+
+loadHamsters();
+</script>
+
+</body>
+</html>    button {
         margin-top: 20px;
         padding: 12px 25px;
         font-size: 18px;
