@@ -89,41 +89,25 @@ function getRandom(arr) {
 }
 
 async function loadHamsters() {
-    grid.innerHTML = ""; // clear old images
-
-    const query = getRandom(hamsterQueries);
-    const page = Math.floor(Math.random() * 50) + 1;
-
-    const res = await fetch(
-        `https://pixabay.com/api/?key=${API_KEY}&q=${encodeURIComponent(query)}&image_type=photo&per_page=12&page=${page}`
-    );
-
-    const data = await res.json();
-
-    data.hits.forEach(item => {
-        const img = document.createElement("img");
-        img.src = item.webformatURL;
-        grid.appendChild(img);
-    });
-}
-
-// initial load
-async function loadHamsters() {
     grid.innerHTML = "";
 
-    // keep ONE strong query for consistency
     const query = "hamster";
 
-    // use a slowly changing page instead of pure randomness
-    const page = Math.floor(Math.random() * 10) + 1;
+    // Keep page small + cycling (prevents empty results)
+    const page = (Math.floor(Math.random() * 5) + 1);
 
-    const res = await fetch(
-        `https://pixabay.com/api/?key=${API_KEY}&q=${encodeURIComponent(query)}&image_type=photo&per_page=12&page=${page}&safesearch=true`
-    );
+    const url = `https://pixabay.com/api/?key=${API_KEY}&q=${encodeURIComponent(query)}&image_type=photo&per_page=12&page=${page}&safesearch=true`;
 
+    const res = await fetch(url);
     const data = await res.json();
 
-    // shuffle locally instead of changing API behavior too much
+    // SAFETY CHECK: prevent crash if API returns nothing
+    if (!data.hits || data.hits.length === 0) {
+        console.log("No results, retrying...");
+        return loadHamsters();
+    }
+
+    // shuffle results locally
     const shuffled = data.hits.sort(() => Math.random() - 0.5);
 
     shuffled.forEach(item => {
