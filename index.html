@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Random Cats</title>
+<title>Random Hamsters</title>
+
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -12,9 +13,11 @@
         margin: 0;
         padding: 20px;
     }
+
     h1 {
         margin-bottom: 20px;
     }
+
     .grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -22,6 +25,7 @@
         max-width: 900px;
         margin: auto;
     }
+
     .grid img {
         width: 100%;
         height: 250px;
@@ -29,6 +33,7 @@
         border-radius: 12px;
         box-shadow: 0 0 10px rgba(0,0,0,0.6);
     }
+
     button {
         margin-top: 20px;
         padding: 12px 25px;
@@ -36,14 +41,16 @@
         border: none;
         border-radius: 10px;
         cursor: pointer;
-        background: #ff4d6d;
+        background: #ffb347;
         color: white;
         transition: 0.2s;
     }
+
     button:hover {
-        background: #ff1f4b;
+        background: #ff9800;
         transform: scale(1.05);
     }
+
     footer {
         margin-top: 50px;
         font-size: 32px;
@@ -51,32 +58,33 @@
     }
 </style>
 </head>
+
 <body>
 
-<h1>Random Cats 🐱</h1>
+<h1>Random Hamsters 🐹</h1>
 
-<div class="grid" id="catGrid"></div>
+<div class="grid" id="hamsterGrid"></div>
 
-<button onclick="loadCats()">Get New Images</button>
+<button onclick="loadHamsters()">Get New Images</button>
 
 <footer>made by Luni</footer>
 
 <script>
-async function loadCats() {
-    const grid = document.getElementById("catGrid");
+async function loadHamsters() {
+    const grid = document.getElementById("hamsterGrid");
     grid.innerHTML = "";
 
-    const res = await fetch("https://api.thecatapi.com/v1/images/search?limit=4");
-    const data = await res.json();
-
-    data.forEach(cat => {
+    for (let i = 0; i < 4; i++) {
+        // Random hamster search from Unsplash
         const img = document.createElement("img");
-        img.src = cat.url;
+
+        img.src = `https://source.unsplash.com/600x400/?hamster&sig=${Math.random()}`;
+
         grid.appendChild(img);
-    });
+    }
 }
 
-loadCats();
+loadHamsters();
 </script>
 
 </body>
